@@ -1,0 +1,103 @@
+import java.util.Scanner;
+
+class Main {
+    public static void main(String[] args) {
+        char[][] board = new char[3][3];
+        for (int r = 0; r < board.length; r++) {// r for row
+            for (int c = 0; c < board[r].length; c++) {
+                board[r][c] = ' ';// c for column
+            }
+        }
+
+        char player = 'X';
+        boolean gameOver = false;
+        Scanner scanner = new Scanner(System.in);
+        
+         System.out.println("Hello! Let`s play Tic Tac Toe! Enter your move like this: row column: 0 1, 2 2 and so on - with space between numbers and press enter. Rows and columns start from 0 and are till 2.Rows are horizontal and columns are vertical. Good luck!");
+        
+        while (!gameOver) {
+            printBoard(board);
+            System.out.print("Player " + player + " enter your row and column choice: ");
+            int r = scanner.nextInt();
+            int c = scanner.nextInt();
+            System.out.println();// place the element on the board
+
+            if (r < 0 || r >= 3 || c < 0 || c >= 3 || board[r][c] != ' ') {
+                System.out.println("Invalid move. Please try again!");
+                continue;// if move is out of board or place is taken - ask for another try
+            }
+
+            board[r][c] = player; 
+            if (haveWon(board, player)) {
+                gameOver = true;
+                printBoard(board);
+                System.out.println("Player " + player + " has won! Congratulations!");// if player has won  - print board and congratulations
+            } else if (isTie(board)) {
+                gameOver = true;
+                printBoard(board);
+                System.out.println("It's a tie!");// if board is full and no winners - print board and call it  a tie
+            } else {
+                  if (player == 'X') {
+                   player = 'O';
+                  } else {
+                  player = 'X';
+                   }   // switch player from X to O or O to X
+            }
+        }
+
+        scanner.close();
+    }
+
+    public static boolean isTie(char[][] board) {
+        // check if there is any winner
+        if (haveWon(board, 'X') || haveWon(board, 'O')) {
+            return false;
+        }
+
+        // check if the board is full
+        for (int r = 0; r < 3; r++) {
+            for (int c = 0; c < 3; c++) {
+                if (board[r][c] == ' ') { // ' ' is an empty spot
+                    return false;
+                }
+            }
+        }
+        return true; // board is full and there is no winner
+    }
+
+    public static boolean haveWon(char[][] board, char player) {
+        // Check rows for win
+        for (int r = 0; r < board.length; r++) {
+            if (board[r][0] == player && board[r][1] == player && board[r][2] == player) {
+                return true;
+            }
+        }
+
+        // check columns for win
+        for (int c = 0; c < board[0].length; c++) {
+            if (board[0][c] == player && board[1][c] == player && board[2][c] == player) {
+                return true;
+            }
+        }
+
+        // check diagonals for win
+        if (board[0][0] == player && board[1][1] == player && board[2][2] == player) {
+            return true;
+        }
+
+        if (board[0][2] == player && board[1][1] == player && board[2][0] == player) {
+            return true;
+        }
+        return false;
+    }
+
+    public static void printBoard(char[][] board) {
+        for (int r = 0; r < board.length; r++) {
+            for (int c = 0; c < board[r].length; c++) {
+                System.out.print(board[r][c] + " | ");
+            }
+            System.out.println();
+            if (r < 2) System.out.println("-----------");// print board "borders"
+        }
+    }
+}
